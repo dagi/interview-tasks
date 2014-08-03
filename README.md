@@ -4,11 +4,11 @@ This is an interview task we use for exploring the programming capabilities. Ple
 
 * The proxy is supposed to listening on ```localhost``` and the port ```8080```. 
 * There are two identical backends represented by HTTP servers
-** Backend 1 listens on ```localhost``` and the port ```8081```
-** Backend 2 listens on ```localhost``` and the port ```8082```
+ * Backend 1 listens on ```localhost``` and the port ```8081```
+ * Backend 2 listens on ```localhost``` and the port ```8082```
 * A backend server handles two resource on on the URI ```/alive``` and ```/ping```
-** a GET HTTP request on the path ```/alive``` returns a JSON document ```{"backend":{"id": "%ID"}}```
-** a GET HTTP request on the path ```/ping``` returns ```pong```
+ * a GET HTTP request on the path ```/alive``` returns a JSON document ```{"backend":{"id": "%ID"}}```
+ * a GET HTTP request on the path ```/ping``` returns ```pong```
 
 ![API proxy](api-proxy.jpg)
 
@@ -42,4 +42,4 @@ The proxy handles a GET HTTP request on the path ```/ping``` by dispatching the 
 
 ## Implementation notes
 
-Please fork this GitHub repository and send a pull request once the acceptance test ```com.gooddata.interviewtask.httpproxy.AcceptanceTest``` passed (```mvn test```). The test starts mocked HTTP servers simulating behaviour of the real backends. It's highly recommended to use the test while you develop the proxy. Feel free to your favourite Java server technology, MVC framework or HTTP client.
+Please fork this GitHub repository and send a pull request once the acceptance test ```com.gooddata.interviewtask.httpproxy.AcceptanceTest``` passed (```mvn test```). The test starts mocked HTTP servers simulating behaviour of the real backends. It's highly recommended to use the test while you develop the proxy. Feel free to use your favourite Java server technology, MVC framework or HTTP client.
