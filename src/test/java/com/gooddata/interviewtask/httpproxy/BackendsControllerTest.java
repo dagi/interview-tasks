@@ -25,7 +25,6 @@ public class BackendsControllerTest {
 		ReflectionTestUtils.setField(backendsController, "backendsService", backendsServiceMock);
 	}
 
-	@Ignore
 	@Test
 	public void testOneBackend() throws Exception {
 		// setup

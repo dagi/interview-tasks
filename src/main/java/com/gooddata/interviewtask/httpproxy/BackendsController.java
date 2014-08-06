@@ -2,6 +2,9 @@ package com.gooddata.interviewtask.httpproxy;
 
 import java.util.List;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Transformer;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -20,19 +23,32 @@ public class BackendsController {
 	@ResponseBody
 	public String getBackends() {
 		List<Backend> backends = backendsService.getBackends();
+		return buildJsonStringForBackends(backends);
+	}
+
+	private String buildJsonStringForBackends(List<Backend> backends) {
 		return "{  \n" +
 				"  \"backends\":[  \n" +
-				"    {  \n" +
-				"      \"backend\":{  \n" +
-				"        \"id\":\"8082\"\n" +
-				"      }\n" +
-				"    },\n" +
-				"    {  \n" +
-				"      \"backend\":{  \n" +
-				"        \"id\":\"8083\"\n" +
-				"      }\n" +
-				"    }\n" +
+				StringUtils.join(
+						CollectionUtils.collect(backends, new Transformer() {
+							@Override
+							public Object transform(Object input) {
+								return buildJsonForSingleBackend(((Backend)input).getId());
+							}
+						})
+						,",\n"
+				)
+				 +
+				"\n" +
 				"  ]\n" +
 				"}";
+	}
+
+	private String buildJsonForSingleBackend(final String id) {
+		return "    {  \n" +
+				"      \"backend\":{  \n" +
+				"        \"id\":\"" + id + "\"\n" +
+				"      }\n" +
+				"    }";
 	}
 }
