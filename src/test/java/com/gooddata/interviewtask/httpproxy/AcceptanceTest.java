@@ -4,25 +4,25 @@
 
 package com.gooddata.interviewtask.httpproxy;
 
-import static com.gooddata.interviewtask.httpproxy.TestSupport.backend1;
-import static com.gooddata.interviewtask.httpproxy.TestSupport.backend2;
-import static com.gooddata.interviewtask.httpproxy.TestSupport.mockAlive;
-import static com.gooddata.interviewtask.httpproxy.TestSupport.mockPing;
+import static com.gooddata.interviewtask.httpproxy.TestSupport.*;
 import static net.javacrumbs.jsonunit.JsonMatchers.jsonEquals;
 import static net.javacrumbs.restfire.RestFire.fire;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.HttpStatus.SERVICE_UNAVAILABLE;
-import net.jadler.JadlerMocker;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
+
+import net.jadler.JadlerMocker;
 
 /**
  * This test defines acceptance criteria for the HTTP proxy. The backends are mocked
  * including their expected behavior.
  *
  */
+@Ignore
 public class AcceptanceTest {
 
     private JadlerMocker backend1 = backend1();
