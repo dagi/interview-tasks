@@ -28,7 +28,7 @@ public class BackendsController {
 
 	private String buildJsonStringForBackends(List<Backend> backends) {
 		return "{  \n" +
-				"  \"backends\":[  \n" +
+				"  \"backends\":[  " +
 				StringUtils.join(
 						CollectionUtils.collect(backends, new Transformer() {
 							@Override
@@ -36,16 +36,15 @@ public class BackendsController {
 								return buildJsonForSingleBackend(((Backend)input).getId());
 							}
 						})
-						,",\n"
+						,","
 				)
-				 +
-				"\n" +
+				+ "\n" +
 				"  ]\n" +
 				"}";
 	}
 
 	private String buildJsonForSingleBackend(final String id) {
-		return "    {  \n" +
+		return "\n    {  \n" +
 				"      \"backend\":{  \n" +
 				"        \"id\":\"" + id + "\"\n" +
 				"      }\n" +

@@ -8,7 +8,6 @@ import java.util.List;
 import org.easymock.EasyMock;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.Ignore;
 import org.springframework.test.util.ReflectionTestUtils;
 
 public class BackendsControllerTest {
@@ -23,6 +22,23 @@ public class BackendsControllerTest {
 		backendsController = new BackendsController();
 		backendsServiceMock = EasyMock.createMock(BackendsService.class);
 		ReflectionTestUtils.setField(backendsController, "backendsService", backendsServiceMock);
+	}
+
+	@Test
+	public void testZeroBackends() throws Exception {
+		// setup
+		List<Backend> listOfOneBackend = Arrays.asList();
+		EasyMock.expect(backendsServiceMock.getBackends()).andReturn(listOfOneBackend);
+		EasyMock.replay(backendsServiceMock);
+
+		// test
+		String backendsJson = backendsController.getBackends();
+
+		String expectedJson = "{  \n" +
+				"  \"backends\":[  \n" +
+				"  ]\n" +
+				"}";
+		assertEquals(expectedJson, backendsJson);
 	}
 
 	@Test
