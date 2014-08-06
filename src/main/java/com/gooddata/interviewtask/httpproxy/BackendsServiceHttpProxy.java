@@ -1,5 +1,6 @@
 package com.gooddata.interviewtask.httpproxy;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -8,6 +9,6 @@ import org.springframework.stereotype.Service;
 public class BackendsServiceHttpProxy implements BackendsService {
 	@Override
 	public List<Backend> getBackends() {
-		return null;  //To change body of implemented methods use File | Settings | File Templates.
+		return Arrays.asList( new Backend("8082"), new Backend("8083") );
 	}
 }

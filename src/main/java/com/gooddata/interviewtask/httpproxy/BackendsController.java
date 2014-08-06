@@ -46,7 +46,7 @@ public class BackendsController {
 	private String buildJsonForSingleBackend(final String id) {
 		return "\n    {  \n" +
 				"      \"backend\":{  \n" +
-				"        \"id\":\"" + id + "\"\n" +
+				"        \"id\":" + id + "\n" +
 				"      }\n" +
 				"    }";
 	}

@@ -55,7 +55,7 @@ public class BackendsControllerTest {
 				"  \"backends\":[  \n" +
 				"    {  \n" +
 				"      \"backend\":{  \n" +
-				"        \"id\":\""+PORT_1+"\"\n" +
+				"        \"id\":"+PORT_1+"\n" +
 				"      }\n" +
 				"    }\n" +
 				"  ]\n" +
@@ -77,12 +77,12 @@ public class BackendsControllerTest {
 				"  \"backends\":[  \n" +
 				"    {  \n" +
 				"      \"backend\":{  \n" +
-				"        \"id\":\""+PORT_1+"\"\n" +
+				"        \"id\":"+PORT_1+"\n" +
 				"      }\n" +
 				"    },\n" +
 				"    {  \n" +
 				"      \"backend\":{  \n" +
-				"        \"id\":\""+PORT_2+"\"\n" +
+				"        \"id\":"+PORT_2+"\n" +
 				"      }\n" +
 				"    }\n" +
 				"  ]\n" +
