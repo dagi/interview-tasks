@@ -162,6 +162,22 @@
             <artifactId>jersey-client</artifactId>
             <version>1.9</version>
         </dependency>
+
+        <!-- JSON in Java -->
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20140107</version>
+        </dependency>
+
+        <!-- SLFJ -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.5</version>
+        </dependency>
+
+
     </dependencies>
 
     <build>
