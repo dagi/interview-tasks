@@ -12,7 +12,6 @@ import static org.springframework.http.HttpStatus.SERVICE_UNAVAILABLE;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import net.jadler.JadlerMocker;
@@ -22,7 +21,7 @@ import net.jadler.JadlerMocker;
  * including their expected behavior.
  *
  */
-@Ignore
+//@Ignore
 public class AcceptanceTest {
 
     private JadlerMocker backend1 = backend1();
@@ -76,7 +75,7 @@ public class AcceptanceTest {
                 .withHeader("Accept", "application/json")
             .expectResponse()
                 .havingStatusEqualTo(OK.value())
-                .havingBody(jsonEquals("{\"backends\":[{\"backend\":{\"id\":8081}},{\"backend\":{\"id\":8082}}]}"));
+                .havingBody(jsonEquals("{\"backends\":[{\"backend\":{\"id\":" + BACKEND1_PORT + "}},{\"backend\":{\"id\":" + BACKEND2_PORT + "}}]}"));
 
 
         backend1.verifyThatRequest().havingPathEqualTo("/alive").receivedOnce();
