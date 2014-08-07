@@ -4,7 +4,7 @@ import static junit.framework.Assert.assertEquals;
 
 import org.junit.Test;
 
-import com.gooddata.interviewtask.httpproxy.Backend;
+import com.gooddata.interviewtask.httpproxy.backends.Backend;
 
 public class BackendsServiceHttpProxyTest {
 

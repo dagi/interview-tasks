@@ -6,8 +6,8 @@ import java.util.List;
 import org.json.JSONObject;
 import org.springframework.stereotype.Service;
 
-import com.gooddata.interviewtask.httpproxy.Backend;
-import com.gooddata.interviewtask.httpproxy.BackendsService;
+import com.gooddata.interviewtask.httpproxy.backends.Backend;
+import com.gooddata.interviewtask.httpproxy.backends.BackendsService;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.WebResource;
 

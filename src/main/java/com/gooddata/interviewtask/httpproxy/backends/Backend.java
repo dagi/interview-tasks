@@ -1,4 +1,4 @@
-package com.gooddata.interviewtask.httpproxy;
+package com.gooddata.interviewtask.httpproxy.backends;
 
 public class Backend {
 	private String id;

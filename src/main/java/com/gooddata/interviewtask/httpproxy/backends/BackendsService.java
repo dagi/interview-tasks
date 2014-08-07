@@ -1,4 +1,4 @@
-package com.gooddata.interviewtask.httpproxy;
+package com.gooddata.interviewtask.httpproxy.backends;
 
 import java.util.List;
 

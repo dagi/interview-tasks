@@ -10,6 +10,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.test.util.ReflectionTestUtils;
 
+import com.gooddata.interviewtask.httpproxy.backends.Backend;
+import com.gooddata.interviewtask.httpproxy.backends.BackendsController;
+import com.gooddata.interviewtask.httpproxy.backends.BackendsService;
+
 public class BackendsControllerTest {
 
 	public static final String PORT_1 = "8082";
