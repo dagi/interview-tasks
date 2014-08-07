@@ -121,8 +121,8 @@ public class AcceptanceTest {
         mockAlive(backend1);
 	    backend2.reset();
         mockAlive(backend2);
-        mockPing(backend1, 60, SERVICE_UNAVAILABLE.value());
-        mockPing(backend2, 60, SERVICE_UNAVAILABLE.value());
+        mockPing(backend1, 60, OK.value());  // should respond with SERVICE_UNAVAILABLE even if ...
+        mockPing(backend2, 60, OK.value());  // ... the slow responses are OK because proxy should timeout them both
 
         fire()
             .get()
