@@ -1,6 +1,6 @@
 package com.gooddata.interviewtask.httpproxy.http;
 
-import static junit.framework.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 

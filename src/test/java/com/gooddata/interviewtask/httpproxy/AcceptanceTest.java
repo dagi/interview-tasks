@@ -67,8 +67,10 @@ public class AcceptanceTest {
      */
     @Test
     public void listBackends() {
+	    backend1.reset();
         mockAlive(backend1);
-        mockAlive(backend2);
+	    backend2.reset();
+	    mockAlive(backend2);
         fire()
             .get()
                 .to("http://localhost:8080/backends")
@@ -98,7 +100,7 @@ public class AcceptanceTest {
             .get()
                 .to("http://localhost:8080/ping")
                 .withHeader("Accept", "text/plain")
-                .withHeader("X-Backend-id", "8081")
+                .withHeader("X-Backend-id", Integer.toString(BACKEND1_PORT))
             .expectResponse()
                 .havingStatusEqualTo(OK.value())
                 .havingBodyEqualTo("pong");
@@ -115,7 +117,9 @@ public class AcceptanceTest {
     */
     @Test
     public void delayedResponse() {
+	    backend1.reset();
         mockAlive(backend1);
+	    backend2.reset();
         mockAlive(backend2);
         mockPing(backend1, 60, SERVICE_UNAVAILABLE.value());
         mockPing(backend2, 60, SERVICE_UNAVAILABLE.value());
@@ -134,8 +138,10 @@ public class AcceptanceTest {
      */
     @Test
     public void fallbackToHealthyBackend() {
+	    backend1.reset();
         mockAlive(backend1);
-        mockAlive(backend2);
+	    backend2.reset();
+	    mockAlive(backend2);
         mockPing(backend1, 0, SERVICE_UNAVAILABLE.value());
         mockPing(backend2);
 

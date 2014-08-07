@@ -11,7 +11,7 @@ public class RootController {
 
 	@RequestMapping(method = RequestMethod.GET)
 	@ResponseBody
-	public String getAlive() {
+	public String getRoot() {
 		return "This is ROOT";
 	}
 
