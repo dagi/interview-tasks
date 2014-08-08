@@ -31,6 +31,8 @@ public class AcceptanceTest {
     public void startBackends() {
         backend1.start();
         backend2.start();
+	    backend1.reset();
+	    backend2.reset();
     }
 
     @After
@@ -67,9 +69,7 @@ public class AcceptanceTest {
      */
     @Test
     public void listBackends() {
-	    backend1.reset();
-        mockAlive(backend1);
-	    backend2.reset();
+	    mockAlive(backend1);
 	    mockAlive(backend2);
         fire()
             .get()
@@ -117,10 +117,8 @@ public class AcceptanceTest {
     */
     @Test
     public void delayedResponse() {
-	    backend1.reset();
-        mockAlive(backend1);
-	    backend2.reset();
-        mockAlive(backend2);
+	    mockAlive(backend1);
+	    mockAlive(backend2);
         mockPing(backend1, 60, OK.value());  // should respond with SERVICE_UNAVAILABLE even if ...
         mockPing(backend2, 60, OK.value());  // ... the slow responses are OK because proxy should timeout them both
 
@@ -138,9 +136,7 @@ public class AcceptanceTest {
      */
     @Test
     public void fallbackToHealthyBackend() {
-	    backend1.reset();
-        mockAlive(backend1);
-	    backend2.reset();
+	    mockAlive(backend1);
 	    mockAlive(backend2);
         mockPing(backend1, 0, SERVICE_UNAVAILABLE.value());
         mockPing(backend2);
