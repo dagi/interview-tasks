@@ -15,13 +15,11 @@ import org.junit.Before;
 import org.junit.Test;
 
 import net.jadler.JadlerMocker;
-
 /**
  * This test defines acceptance criteria for the HTTP proxy. The backends are mocked
  * including their expected behavior.
  *
  */
-//@Ignore
 public class AcceptanceTest {
 
     private JadlerMocker backend1 = backend1();
