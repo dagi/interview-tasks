@@ -12,6 +12,7 @@ import com.gooddata.interviewtask.httpproxy.ping.PingService;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.WebResource;
 
+@SuppressWarnings("unused")
 @Service
 public class PingServiceHttpProxy implements PingService {
 
@@ -22,21 +23,14 @@ public class PingServiceHttpProxy implements PingService {
 
 	@Override
 	public Ping getPing(String preferredBackendId) {
-		Collection<String> urls;
-		if (!preferredBackendId.isEmpty()) {
-			urls = getUrls(preferredBackendId);
-		} else {
-			urls = nodeUrls.values();
-		}
+		Collection<String> urls = getUrls(preferredBackendId);
 		Client client = Client.create();
-		boolean gotError = false;
 		String errorMessage = "";
 		for (String url : urls) {
 			WebResource webResource = client.resource(url);
 			try {
 				return Ping.OK(webResource.get(String.class));
 			} catch (Exception e) {
-				gotError = true;
 				errorMessage = e.getMessage();
 			}
 		}
@@ -44,8 +38,12 @@ public class PingServiceHttpProxy implements PingService {
 	}
 
 	private Collection<String> getUrls(String preferredBackendId) {
-		if (nodeUrls.containsKey(preferredBackendId)) {
-			return Arrays.asList( nodeUrls.get(preferredBackendId) );
+		if (!preferredBackendId.isEmpty()) {
+			if (nodeUrls.containsKey(preferredBackendId)) {
+				return Arrays.asList( nodeUrls.get(preferredBackendId) );
+			} else {
+				return nodeUrls.values();
+			}
 		} else {
 			return nodeUrls.values();
 		}
