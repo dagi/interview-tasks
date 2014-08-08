@@ -16,6 +16,8 @@ public class BackendsServiceHttpProxy implements BackendsService {
 
 	static final String[] nodeUrls = {"http://localhost:8082/alive", "http://localhost:8083/alive"};
 
+	private Client httpClient;
+
 	@Override
 	public List<Backend> getBackends() {
 		List<Backend> result = new ArrayList<Backend>();
@@ -37,12 +39,19 @@ public class BackendsServiceHttpProxy implements BackendsService {
 	}
 
 	private String getAliveStatus(String endpointUrl) {
-		Client client = Client.create();
+		Client client = getHttpClient();
 		WebResource webResource = client.resource(endpointUrl);
 		try {
 			return webResource.get(String.class);
 		} catch (Exception e) {
 			return "";
 		}
+	}
+
+	private Client getHttpClient() {
+		if (httpClient == null) {
+			httpClient = Client.create();
+		}
+		return httpClient;
 	}
 }

@@ -22,10 +22,12 @@ public class PingServiceHttpProxy implements PingService {
 																}};
 	private static final Integer TIMEOUT_IN_MILLISECONDS = 5000; // timeout 5 seconds
 
+	private Client httpClient;
+
 	@Override
 	public Ping getPing(String preferredBackendId) {
 		Collection<String> urls = getUrls(preferredBackendId);
-		Client client = Client.create();
+		Client client = getHttpClient();
 		client.setConnectTimeout(TIMEOUT_IN_MILLISECONDS);
 		client.setReadTimeout(TIMEOUT_IN_MILLISECONDS);
 		String errorMessage = "";
@@ -50,6 +52,13 @@ public class PingServiceHttpProxy implements PingService {
 		} else {
 			return nodeUrls.values();
 		}
+	}
+
+	private Client getHttpClient() {
+		if (httpClient == null) {
+			httpClient = Client.create();
+		}
+		return httpClient;
 	}
 
 }
