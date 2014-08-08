@@ -11,7 +11,7 @@ public class BackendsServiceHttpProxyTest {
 	@Test
 	public void testBuildBackendFromJson() throws Exception {
 	   	BackendsServiceHttpProxy service = new BackendsServiceHttpProxy();
-		Backend backend = service.buildBackendFromJson("{\"backend\":{\"id\": \"8082\"}}");
-		assertEquals("8082",backend.getId());
+		Backend backend = service.buildBackendFromJson("{\"backend\":{\"id\": 8082}}");
+		assertEquals(Integer.valueOf(8082),backend.getId());
 	}
 }

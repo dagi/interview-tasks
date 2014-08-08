@@ -17,8 +17,8 @@ import com.gooddata.interviewtask.httpproxy.backends.BackendsService;
 
 public class BackendsControllerTest {
 
-	public static final String PORT_1 = "8082";
-	public static final String PORT_2 = "8083";
+	public static final Integer PORT_1 = 8082;
+	public static final Integer PORT_2 = 8083;
 	private BackendsController backendsController;
 	private BackendsService backendsServiceMock;
 

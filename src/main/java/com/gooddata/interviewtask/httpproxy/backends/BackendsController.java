@@ -36,7 +36,7 @@ public class BackendsController {
 									new HashMap<String,Map>() {{
 										this.put("backend",
 												new HashMap<String,Integer>() {{
-													this.put("id", Integer.valueOf(backend.getId()));
+													this.put("id", backend.getId());
 												}}
 										);
 									}}

@@ -1,13 +1,13 @@
 package com.gooddata.interviewtask.httpproxy.backends;
 
 public class Backend {
-	private String id;
+	private Integer id;
 
-	public Backend(String id) {
+	public Backend(Integer id) {
 		this.id = id;
 	}
 
-	public String getId() {
+	public Integer getId() {
 		return id;
 	}
 }
