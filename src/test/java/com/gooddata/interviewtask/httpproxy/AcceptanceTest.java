@@ -157,13 +157,33 @@ public class AcceptanceTest {
 
     /**
      * Fires a GET HTTP request <code>http://localhost:8080/ping</code> the backend 1
-     * is temporary unavailable so the proxy will dispatches the request to the backend 2.
+     * is temporary unavailable so the proxy will dispatch the request to the backend 2.
      */
     @Test
     public void fallbackToHealthyBackend() {
 	    mockAlive(backend1);
 	    mockAlive(backend2);
         mockPing(backend1, 0, SERVICE_UNAVAILABLE.value());
+        mockPing(backend2);
+
+        fire()
+            .get()
+                .to("http://localhost:8080/ping")
+                .withHeader("Accept", "text/plain")
+            .expectResponse()
+                .havingStatusEqualTo(OK.value())
+                .havingBodyEqualTo("pong");
+    }
+
+    /**
+     * Fires a GET HTTP request <code>http://localhost:8080/ping</code> the backend 1
+     * is slow so the proxy will dispatch the request to the backend 2.
+     */
+    @Test
+    public void fallbackToFastEnoughBackend() {
+	    mockAlive(backend1);
+	    mockAlive(backend2);
+        mockPing(backend1, 60, SERVICE_UNAVAILABLE.value());
         mockPing(backend2);
 
         fire()
