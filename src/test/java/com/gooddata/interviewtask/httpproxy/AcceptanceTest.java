@@ -109,6 +109,31 @@ public class AcceptanceTest {
         backend2.verifyThatRequest().havingPathEqualTo("/ping").receivedNever();
     }
 
+    /**
+     * Fires a GET HTTP request <code>http://localhost:8080/ping</code> with the
+     * HTTP header <code>X-Backend-id: 8082</code> on the proxy and expects the request
+     * is delivered to the backend identified by id <code>8082</code>.
+     */
+    @Test
+    public void dispatchToPrefferedBackendSecondOne() {
+        mockAlive(backend1);
+        mockAlive(backend2);
+        mockPing(backend1);
+        mockPing(backend2);
+
+        fire()
+            .get()
+                .to("http://localhost:8080/ping")
+                .withHeader("Accept", "text/plain")
+                .withHeader("X-Backend-id", Integer.toString(BACKEND2_PORT))
+            .expectResponse()
+                .havingStatusEqualTo(OK.value())
+                .havingBodyEqualTo("pong");
+
+        backend1.verifyThatRequest().havingPathEqualTo("/ping").receivedNever();
+        backend2.verifyThatRequest().havingPathEqualTo("/ping").receivedOnce();
+    }
+
    /**
     * Fires a GET HTTP request <code>http://localhost:8080/ping</code>, both
     * backends do not respond at the specified timeout which is 5 seconds
