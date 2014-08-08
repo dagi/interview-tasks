@@ -20,11 +20,14 @@ public class PingServiceHttpProxy implements PingService {
 																	this.put("8082","http://localhost:8082/ping");
 																	this.put("8083","http://localhost:8083/ping");
 																}};
+	private static final Integer TIMEOUT_IN_MILLISECONDS = 5000; // timeout 5 seconds
 
 	@Override
 	public Ping getPing(String preferredBackendId) {
 		Collection<String> urls = getUrls(preferredBackendId);
 		Client client = Client.create();
+		client.setConnectTimeout(TIMEOUT_IN_MILLISECONDS);
+		client.setReadTimeout(TIMEOUT_IN_MILLISECONDS);
 		String errorMessage = "";
 		for (String url : urls) {
 			WebResource webResource = client.resource(url);
