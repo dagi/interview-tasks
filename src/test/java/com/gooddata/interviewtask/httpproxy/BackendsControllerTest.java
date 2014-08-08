@@ -1,6 +1,7 @@
 package com.gooddata.interviewtask.httpproxy;
 
-import static org.junit.Assert.assertEquals;
+import static net.javacrumbs.jsonunit.JsonMatchers.jsonEquals;
+import static org.junit.Assert.assertThat;
 
 import java.util.Arrays;
 import java.util.List;
@@ -42,7 +43,7 @@ public class BackendsControllerTest {
 				"  \"backends\":[  \n" +
 				"  ]\n" +
 				"}";
-		assertEquals(expectedJson, backendsJson);
+		assertThat(backendsJson, jsonEquals(expectedJson));
 	}
 
 	@Test
@@ -64,7 +65,7 @@ public class BackendsControllerTest {
 				"    }\n" +
 				"  ]\n" +
 				"}";
-		assertEquals(expectedJson, backendsJson);
+		assertThat(backendsJson, jsonEquals(expectedJson));
 	}
 
 	@Test
@@ -91,6 +92,6 @@ public class BackendsControllerTest {
 				"    }\n" +
 				"  ]\n" +
 				"}";
-		assertEquals(expectedJson, backendsJson);
+		assertThat(backendsJson, jsonEquals(expectedJson));
 	}
 }
