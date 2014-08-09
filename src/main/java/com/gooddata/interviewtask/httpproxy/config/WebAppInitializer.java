@@ -2,6 +2,9 @@ package com.gooddata.interviewtask.httpproxy.config;
 
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
+/**
+ * Servlet 3 initialization - assembling the web app
+ */
 @SuppressWarnings("unused")
 public class WebAppInitializer extends AbstractAnnotationConfigDispatcherServletInitializer {
 	@Override
@@ -16,6 +19,6 @@ public class WebAppInitializer extends AbstractAnnotationConfigDispatcherServlet
 
 	@Override
 	protected String[] getServletMappings() {
-		return new String[]{"/"};
+		return new String[]{"/ping", "/backends"};
 	}
 }
