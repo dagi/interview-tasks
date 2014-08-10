@@ -15,8 +15,8 @@ import net.jadler.stubbing.server.jetty.JettyStubHttpServer;
 @Ignore
 class TestSupport {
 
-    static final int BACKEND1_PORT = 8082;
-    static final int BACKEND2_PORT = 8083;
+    static final int BACKEND1_PORT = 8081;
+    static final int BACKEND2_PORT = 8082;
 
     private static JadlerMocker backend1 = new JadlerMocker(new JettyStubHttpServer(BACKEND1_PORT));
     private static JadlerMocker backend2 = new JadlerMocker(new JettyStubHttpServer(BACKEND2_PORT));
