@@ -16,6 +16,9 @@ import com.sun.jersey.api.client.WebResource;
 @Service
 public class PingServiceHttpProxy implements PingService {
 
+	/**
+	 * Map of the node URLs identified by port number of the backend
+	 */
 	static final Map<String,String> nodeUrls = new HashMap<String, String>(2) {{
 																	this.put("8082","http://localhost:8082/ping");
 																	this.put("8083","http://localhost:8083/ping");
@@ -24,6 +27,17 @@ public class PingServiceHttpProxy implements PingService {
 
 	private Client httpClient;
 
+	/**
+	 * Sends the ping requests to the backends in nodeUrls
+	 * <ul>
+	 *      <li>A backend might be temporary unavailable and immediately respond with HTTP status 503.
+	 *          When a backend returns 503 the proxy will dispatch the request to another backend.</li>
+	 *      <li>A backend might be slowed down and respond after a while.
+	 *          When both backends do not respond the proxy will respond by HTTP status 503.</li>
+	 * </ul>
+	 * @param preferredBackendId id (port number) of preferred backend node
+	 * @return {@link Ping} structure containing response text (from the backend) and status code
+	 */
 	@Override
 	public Ping getPing(String preferredBackendId) {
 		Collection<String> urls = getUrls(preferredBackendId);
