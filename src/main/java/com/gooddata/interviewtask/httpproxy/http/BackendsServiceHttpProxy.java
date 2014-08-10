@@ -11,13 +11,42 @@ import com.gooddata.interviewtask.httpproxy.backends.BackendsService;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.WebResource;
 
+/**
+ * Implemenation of {@link BackendsService} probing nodes in nodeUrls and listing them
+ *
+ * @see #nodeUrls
+ */
 @Service
 public class BackendsServiceHttpProxy implements BackendsService {
 
+	/**
+	 * URLs of the probing service in backend nodes
+	 */
 	static final String[] nodeUrls = {"http://localhost:8082/alive", "http://localhost:8083/alive"};
 
 	private Client httpClient;
 
+	/**
+	 * Handles a request by dispatching GET /alive requests to backends defined in {@link #nodeUrls},
+	 * merges their responses and returns a JSON document with the following structure
+	 * <pre>
+	 *     {
+	 *      "backends":[
+	 *                  {
+	 *                    "backend":{
+	 *                                "id":"%ID"
+	 *                              }
+	 *                  },
+	 *                  {
+	 *                    "backend":{
+	 *                                "id":"%ID"
+	 *                              }
+	 *                  }
+	 *                 ]
+	 *    }
+	 * </pre>
+	 * @return JSON document listing currently active nodes
+	 */
 	@Override
 	public List<Backend> getBackends() {
 		List<Backend> result = new ArrayList<Backend>();
@@ -38,6 +67,11 @@ public class BackendsServiceHttpProxy implements BackendsService {
 		return new Backend(id);
 	}
 
+	/**
+	 * Probes the backend node. If alive, it should return a JSON document {"backend":{"id": "%ID"}}
+	 * @param endpointUrl URL of the probed backend node
+	 * @return JSON response of the backend node or empty string in case of an error (e.g. when the node is not available)
+	 */
 	private String getAliveStatus(String endpointUrl) {
 		Client client = getHttpClient();
 		WebResource webResource = client.resource(endpointUrl);

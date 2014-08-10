@@ -13,7 +13,7 @@ import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.WebResource;
 
 /**
- * Implements {@link PingService} by delegating the requests to HTTP requests to the backends
+ * Implemenation of {@link PingService} delegating the requests to HTTP requests to the backends
  * whose URLs are defined in nodeUrls.
  *
  * @see #getPing(String)
@@ -35,7 +35,7 @@ public class PingServiceHttpProxy implements PingService {
 	private Client httpClient;
 
 	/**
-	 * Sends the ping requests to the backends in nodeUrls
+	 * Sends the <strong>ping</strong> requests to the backends in nodeUrls
 	 * <ul>
 	 *      <li>A backend might be temporary unavailable and immediately respond with HTTP status 503.
 	 *          When a backend returns 503 the proxy will dispatch the request to another backend.</li>
