@@ -12,6 +12,13 @@ import com.gooddata.interviewtask.httpproxy.ping.PingService;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.WebResource;
 
+/**
+ * Implements {@link PingService} by delegating the requests to HTTP requests to the backends
+ * whose URLs are defined in nodeUrls.
+ *
+ * @see #getPing(String)
+ * @see #nodeUrls
+ */
 @SuppressWarnings("unused")
 @Service
 public class PingServiceHttpProxy implements PingService {
