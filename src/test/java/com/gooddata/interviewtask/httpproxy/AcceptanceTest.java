@@ -4,20 +4,17 @@
 
 package com.gooddata.interviewtask.httpproxy;
 
-import static com.gooddata.interviewtask.httpproxy.TestSupport.backend1;
-import static com.gooddata.interviewtask.httpproxy.TestSupport.backend2;
-import static com.gooddata.interviewtask.httpproxy.TestSupport.mockAlive;
-import static com.gooddata.interviewtask.httpproxy.TestSupport.mockPing;
+import static com.gooddata.interviewtask.httpproxy.TestSupport.*;
 import static net.javacrumbs.jsonunit.JsonMatchers.jsonEquals;
 import static net.javacrumbs.restfire.RestFire.fire;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.HttpStatus.SERVICE_UNAVAILABLE;
-import net.jadler.JadlerMocker;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import net.jadler.JadlerMocker;
 /**
  * This test defines acceptance criteria for the HTTP proxy. The backends are mocked
  * including their expected behavior.
@@ -32,6 +29,8 @@ public class AcceptanceTest {
     public void startBackends() {
         backend1.start();
         backend2.start();
+	    backend1.reset();
+	    backend2.reset();
     }
 
     @After
@@ -68,15 +67,15 @@ public class AcceptanceTest {
      */
     @Test
     public void listBackends() {
-        mockAlive(backend1);
-        mockAlive(backend2);
+	    mockAlive(backend1);
+	    mockAlive(backend2);
         fire()
             .get()
                 .to("http://localhost:8080/backends")
                 .withHeader("Accept", "application/json")
             .expectResponse()
                 .havingStatusEqualTo(OK.value())
-                .havingBody(jsonEquals("{\"backends\":[{\"backend\":{\"id\":8081}},{\"backend\":{\"id\":8082}}]}"));
+                .havingBody(jsonEquals("{\"backends\":[{\"backend\":{\"id\":" + BACKEND1_PORT + "}},{\"backend\":{\"id\":" + BACKEND2_PORT + "}}]}"));
 
 
         backend1.verifyThatRequest().havingPathEqualTo("/alive").receivedOnce();
@@ -99,13 +98,38 @@ public class AcceptanceTest {
             .get()
                 .to("http://localhost:8080/ping")
                 .withHeader("Accept", "text/plain")
-                .withHeader("X-Backend-id", "8081")
+                .withHeader("X-Backend-id", Integer.toString(BACKEND1_PORT))
             .expectResponse()
                 .havingStatusEqualTo(OK.value())
                 .havingBodyEqualTo("pong");
 
         backend1.verifyThatRequest().havingPathEqualTo("/ping").receivedOnce();
         backend2.verifyThatRequest().havingPathEqualTo("/ping").receivedNever();
+    }
+
+    /**
+     * Fires a GET HTTP request <code>http://localhost:8080/ping</code> with the
+     * HTTP header <code>X-Backend-id: 8082</code> on the proxy and expects the request
+     * is delivered to the backend identified by id <code>8082</code>.
+     */
+    @Test
+    public void dispatchToPrefferedBackendSecondOne() {
+        mockAlive(backend1);
+        mockAlive(backend2);
+        mockPing(backend1);
+        mockPing(backend2);
+
+        fire()
+            .get()
+                .to("http://localhost:8080/ping")
+                .withHeader("Accept", "text/plain")
+                .withHeader("X-Backend-id", Integer.toString(BACKEND2_PORT))
+            .expectResponse()
+                .havingStatusEqualTo(OK.value())
+                .havingBodyEqualTo("pong");
+
+        backend1.verifyThatRequest().havingPathEqualTo("/ping").receivedNever();
+        backend2.verifyThatRequest().havingPathEqualTo("/ping").receivedOnce();
     }
 
    /**
@@ -116,10 +140,10 @@ public class AcceptanceTest {
     */
     @Test
     public void delayedResponse() {
-        mockAlive(backend1);
-        mockAlive(backend2);
-        mockPing(backend1, 60, SERVICE_UNAVAILABLE.value());
-        mockPing(backend2, 60, SERVICE_UNAVAILABLE.value());
+	    mockAlive(backend1);
+	    mockAlive(backend2);
+        mockPing(backend1, 60, OK.value());  // should respond with SERVICE_UNAVAILABLE even if ...
+        mockPing(backend2, 60, OK.value());  // ... the slow responses are OK because proxy should timeout them both
 
         fire()
             .get()
@@ -131,13 +155,33 @@ public class AcceptanceTest {
 
     /**
      * Fires a GET HTTP request <code>http://localhost:8080/ping</code> the backend 1
-     * is temporary unavailable so the proxy will dispatches the request to the backend 2.
+     * is temporary unavailable so the proxy will dispatch the request to the backend 2.
      */
     @Test
     public void fallbackToHealthyBackend() {
-        mockAlive(backend1);
-        mockAlive(backend2);
+	    mockAlive(backend1);
+	    mockAlive(backend2);
         mockPing(backend1, 0, SERVICE_UNAVAILABLE.value());
+        mockPing(backend2);
+
+        fire()
+            .get()
+                .to("http://localhost:8080/ping")
+                .withHeader("Accept", "text/plain")
+            .expectResponse()
+                .havingStatusEqualTo(OK.value())
+                .havingBodyEqualTo("pong");
+    }
+
+    /**
+     * Fires a GET HTTP request <code>http://localhost:8080/ping</code> the backend 1
+     * is slow so the proxy will dispatch the request to the backend 2.
+     */
+    @Test
+    public void fallbackToFastEnoughBackend() {
+	    mockAlive(backend1);
+	    mockAlive(backend2);
+        mockPing(backend1, 60, SERVICE_UNAVAILABLE.value());
         mockPing(backend2);
 
         fire()
