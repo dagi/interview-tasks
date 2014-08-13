@@ -11,8 +11,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupp
  */
 @Configuration
 @EnableWebMvc
-@ComponentScan(basePackages = {"com.gooddata.interviewtask.httpproxy.ping",
-							   "com.gooddata.interviewtask.httpproxy.backends",
-							   "com.gooddata.interviewtask.httpproxy.http"})
+@ComponentScan(basePackages = {"com.gooddata.interviewtask.httpproxy"})
 public class WebMvcConfig extends WebMvcConfigurationSupport {
 }

@@ -2,11 +2,12 @@ package com.gooddata.interviewtask.httpproxy.http;
 
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+
+import javax.inject.Inject;
 
 import org.springframework.stereotype.Service;
 
+import com.gooddata.interviewtask.httpproxy.config.NodeList;
 import com.gooddata.interviewtask.httpproxy.ping.Ping;
 import com.gooddata.interviewtask.httpproxy.ping.PingService;
 import com.sun.jersey.api.client.Client;
@@ -14,10 +15,10 @@ import com.sun.jersey.api.client.WebResource;
 
 /**
  * Implemenation of {@link PingService} delegating the requests to HTTP requests to the backends
- * whose URLs are defined in nodeUrls.
+ * whose URLs are defined in nodeList.
  *
  * @see #getPing(String)
- * @see #nodeUrls
+ * @see #nodeList
  */
 @SuppressWarnings("unused")
 @Service
@@ -26,12 +27,14 @@ public class PingServiceHttpProxy implements PingService {
 	/**
 	 * Map of the node URLs identified by port number of the backend
 	 */
-	static final Map<String,String> nodeUrls = new HashMap<String, String>(2) {{
-																	this.put("8082","http://localhost:8082/ping");
-																	this.put("8083","http://localhost:8083/ping");
-																}};
+	@Inject
+	private NodeList nodeList;
+
+	private static final String PINGING_URL_SUFFIX = "/ping";
+
 	private static final Integer TIMEOUT_IN_MILLISECONDS = 5000; // timeout 5 seconds
 
+	@Inject
 	private Client httpClient;
 
 	/**
@@ -48,7 +51,7 @@ public class PingServiceHttpProxy implements PingService {
 	@Override
 	public Ping getPing(String preferredBackendId) {
 		Collection<String> urls = getUrls(preferredBackendId);
-		Client client = getHttpClient();
+		Client client = httpClient;
 		client.setConnectTimeout(TIMEOUT_IN_MILLISECONDS);
 		client.setReadTimeout(TIMEOUT_IN_MILLISECONDS);
 		String errorMessage = "";
@@ -64,22 +67,15 @@ public class PingServiceHttpProxy implements PingService {
 	}
 
 	private Collection<String> getUrls(String preferredBackendId) {
-		if (!preferredBackendId.isEmpty()) {
-			if (nodeUrls.containsKey(preferredBackendId)) {
-				return Arrays.asList( nodeUrls.get(preferredBackendId) );
-			} else {
-				return nodeUrls.values();
-			}
-		} else {
-			return nodeUrls.values();
+		if (!preferredBackendId.isEmpty() && !"none".equals(preferredBackendId)) {
+			try {
+				Integer id = Integer.valueOf(preferredBackendId);
+				if (nodeList.containsKey(id)) {
+					return Arrays.asList( nodeList.get(id).concat(PINGING_URL_SUFFIX) );
+				}
+			} catch (NumberFormatException ignored) { } // in case of non-numeric preferredBackendId return all node Urls
 		}
-	}
-
-	private Client getHttpClient() {
-		if (httpClient == null) {
-			httpClient = Client.create();
-		}
-		return httpClient;
+		return nodeList.getBaseUrlsWithSuffix(PINGING_URL_SUFFIX);
 	}
 
 }

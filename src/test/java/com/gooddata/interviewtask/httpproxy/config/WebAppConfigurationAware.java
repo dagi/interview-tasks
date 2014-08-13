@@ -30,7 +30,7 @@ public class WebAppConfigurationAware {
 	}
 
 	@Test
-	public void testRoot() throws Exception {
+	public void testBackends() throws Exception {
 		mockMvc.perform(get("/backends")).andExpect(content().string(containsString("backends")));
 	}
 

@@ -3,31 +3,38 @@ package com.gooddata.interviewtask.httpproxy.http;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import org.json.JSONObject;
 import org.springframework.stereotype.Service;
 
 import com.gooddata.interviewtask.httpproxy.backends.Backend;
 import com.gooddata.interviewtask.httpproxy.backends.BackendsService;
+import com.gooddata.interviewtask.httpproxy.config.NodeList;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.WebResource;
 
 /**
  * Implemenation of {@link BackendsService} probing nodes in nodeUrls and listing them
  *
- * @see #nodeUrls
+ * @see #nodeList
  */
 @Service
 public class BackendsServiceHttpProxy implements BackendsService {
 
 	/**
-	 * URLs of the probing service in backend nodes
+	 * Bases of the URLs of the probing service in backend nodes
 	 */
-	static final String[] nodeUrls = {"http://localhost:8082/alive", "http://localhost:8083/alive"};
+	@Inject
+	private NodeList nodeList;
 
+	public static final String PROBING_URL_SUFFIX = "/alive";
+
+	@Inject
 	private Client httpClient;
 
 	/**
-	 * Handles a request by dispatching GET /alive requests to backends defined in {@link #nodeUrls},
+	 * Handles a request by dispatching GET /alive requests to backends defined in {@link #nodeList},
 	 * merges their responses and returns a JSON document with the following structure
 	 * <pre>
 	 *     {
@@ -49,8 +56,8 @@ public class BackendsServiceHttpProxy implements BackendsService {
 	 */
 	@Override
 	public List<Backend> getBackends() {
-		List<Backend> result = new ArrayList<Backend>();
-		for (String nodeUrl : nodeUrls) {
+		List<Backend> result = new ArrayList<>();
+		for (String nodeUrl : nodeList.getBaseUrlsWithSuffix(PROBING_URL_SUFFIX)) {
 			String nodeStatusJson = getAliveStatus(nodeUrl);
 			if (!nodeStatusJson.isEmpty()) {
 				Backend backend = buildBackendFromJson(nodeStatusJson);
@@ -73,7 +80,7 @@ public class BackendsServiceHttpProxy implements BackendsService {
 	 * @return JSON response of the backend node or empty string in case of an error (e.g. when the node is not available)
 	 */
 	private String getAliveStatus(String endpointUrl) {
-		Client client = getHttpClient();
+		Client client = httpClient;
 		WebResource webResource = client.resource(endpointUrl);
 		try {
 			return webResource.get(String.class);
@@ -82,10 +89,4 @@ public class BackendsServiceHttpProxy implements BackendsService {
 		}
 	}
 
-	private Client getHttpClient() {
-		if (httpClient == null) {
-			httpClient = Client.create();
-		}
-		return httpClient;
-	}
 }
